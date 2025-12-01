@@ -166,7 +166,7 @@ with left:
 # RIGHT — Bar chart (전체=필터 100% 동일 보장)
 # ============================================================
 with right:
-    st.markdown("## 📊 분포 비교 (정확한 Bar Chart)")
+    st.markdown("## 📊 분포 비교 (Bar Chart)")
 
     def plot_bar(df_total, df_filtered, field, title):
         t = df_total[field].value_counts(dropna=False).sort_index()
@@ -210,4 +210,4 @@ with right:
     df["percentage_bin"] = df["percentage"].fillna(-1).apply(per_bin)
     filtered["percentage_bin"] = filtered["percentage"].fillna(-1).apply(per_bin)
 
-    plot_bar(df, filtered, "percentage_bin", "Percentage 분포 (10단위)")
+    plot_bar(df, filtered, "percentage_bin", "Percentage 분포")
