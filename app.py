@@ -19,6 +19,25 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
+# Password Gate
+# ─────────────────────────────────────────────
+_PASSWORD = "Ehdzlzl13!"
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.markdown("## 🔐 접근 제한")
+    pw = st.text_input("비밀번호를 입력하세요", type="password")
+    if st.button("확인"):
+        if pw == _PASSWORD:
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("비밀번호가 틀렸습니다.")
+    st.stop()
+
+# ─────────────────────────────────────────────
 # Data
 # ─────────────────────────────────────────────
 @st.cache_data
@@ -116,10 +135,10 @@ unique_count = filtered["agent_id"].nunique()
 # ─────────────────────────────────────────────
 # AI Chart Helpers
 # ─────────────────────────────────────────────
-_BG   = "rgba(8,12,24,0.97)"
-_GRID = "rgba(100,150,255,0.07)"
-_BLUE = "#00B4FF"
-_PINK = "#FF4FD8"
+_BG   = "rgba(255,255,255,1.0)"
+_GRID = "rgba(180,195,220,0.5)"
+_BLUE = "#1565C0"
+_PINK = "#C2185B"
 
 
 def _kde(series, pts=200, bw=0.6):
@@ -138,16 +157,16 @@ def _kde(series, pts=200, bw=0.6):
 
 def _layout(title, h=265, extra=None):
     d = dict(
-        title=dict(text=title, font=dict(color="#8AC8FF", size=13), x=0.01),
-        paper_bgcolor=_BG, plot_bgcolor=_BG, font=dict(color="#6688AA"),
+        title=dict(text=title, font=dict(color="#1A237E", size=13), x=0.01),
+        paper_bgcolor=_BG, plot_bgcolor=_BG, font=dict(color="#333344"),
         height=h, margin=dict(l=44, r=16, t=44, b=32),
         legend=dict(
-            bgcolor="rgba(0,0,0,0.45)", bordercolor="rgba(100,150,255,0.25)",
-            borderwidth=1, font=dict(size=10, color="#99BBDD"),
+            bgcolor="rgba(255,255,255,0.85)", bordercolor="rgba(100,120,180,0.35)",
+            borderwidth=1, font=dict(size=10, color="#333344"),
             orientation="h", x=0.55, y=1.12,
         ),
-        xaxis=dict(gridcolor=_GRID, zeroline=False, tickfont=dict(size=9, color="#445566")),
-        yaxis=dict(gridcolor=_GRID, zeroline=False, tickfont=dict(size=9, color="#445566")),
+        xaxis=dict(gridcolor=_GRID, zeroline=False, tickfont=dict(size=9, color="#555566")),
+        yaxis=dict(gridcolor=_GRID, zeroline=False, tickfont=dict(size=9, color="#555566")),
     )
     if extra:
         d.update(extra)
@@ -172,8 +191,8 @@ def fig_distribution(df_all, df_flt, field, title):
     ])
 
     for s, col, fill in [
-        (df_all[field], _BLUE, "rgba(0,180,255,0.09)"),
-        (df_flt[field], _PINK, "rgba(255,79,216,0.13)"),
+        (df_all[field], _BLUE, "rgba(21,101,192,0.08)"),
+        (df_flt[field], _PINK, "rgba(194,24,91,0.10)"),
     ]:
         xs, ys = _kde(s)
         if len(xs):
@@ -234,19 +253,19 @@ def fig_radar(df_all, df_flt):
         ))
 
     fig.update_layout(
-        title=dict(text="🎯 평균 비교 (Radar)", font=dict(color="#8AC8FF", size=13), x=0.01),
+        title=dict(text="🎯 평균 비교 (Radar)", font=dict(color="#1A237E", size=13), x=0.01),
         polar=dict(
-            bgcolor="rgba(8,12,24,0.0)",
+            bgcolor="rgba(255,255,255,0.0)",
             radialaxis=dict(visible=True, range=[0, 115], gridcolor=_GRID,
-                            tickfont=dict(color="#445566", size=8),
-                            linecolor="rgba(100,150,255,0.15)"),
-            angularaxis=dict(gridcolor=_GRID, tickfont=dict(color="#99BBDD", size=12),
-                             linecolor="rgba(100,150,255,0.2)"),
+                            tickfont=dict(color="#555566", size=8),
+                            linecolor="rgba(100,120,180,0.25)"),
+            angularaxis=dict(gridcolor=_GRID, tickfont=dict(color="#333344", size=12),
+                             linecolor="rgba(100,120,180,0.3)"),
         ),
-        paper_bgcolor=_BG, font=dict(color="#6688AA"), height=265,
+        paper_bgcolor=_BG, font=dict(color="#333344"), height=265,
         margin=dict(l=44, r=44, t=44, b=32),
-        legend=dict(bgcolor="rgba(0,0,0,0.45)", bordercolor="rgba(100,150,255,0.25)",
-                    borderwidth=1, font=dict(size=10, color="#99BBDD"), x=0.72, y=1.12),
+        legend=dict(bgcolor="rgba(255,255,255,0.85)", bordercolor="rgba(100,120,180,0.35)",
+                    borderwidth=1, font=dict(size=10, color="#333344"), x=0.72, y=1.12),
     )
     return fig
 
@@ -259,9 +278,9 @@ def fig_scatter(df_all, df_flt):
             marker=dict(
                 color=df_all["new_contracts"],
                 colorscale=[
-                    [0,   "rgba(0,40,140,0.20)"],
-                    [0.4, "rgba(0,140,255,0.40)"],
-                    [1,   "rgba(80,255,230,0.65)"],
+                    [0,   "rgba(100,149,237,0.30)"],
+                    [0.5, "rgba(30,111,217,0.55)"],
+                    [1,   "rgba(21,101,192,0.85)"],
                 ],
                 size=5, line=dict(width=0),
             ),
