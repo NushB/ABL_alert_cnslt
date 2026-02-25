@@ -293,51 +293,37 @@ with mcol:
 with bcol:
     st.write("")
     st.write("")
-    label = "🔼 접기" if st.session_state.table_expanded else "🔽 펼치기"
+    label = "🔼 목록 닫기" if st.session_state.table_expanded else "🔽 목록 보기"
     if st.button(label, use_container_width=True):
         st.session_state.table_expanded = not st.session_state.table_expanded
         st.rerun()
 
-# ── 펼침 상태: 전체 너비 테이블 + 2열 차트 그리드
+# ── 펼침 상태: 전체 너비 테이블 표시 후 구분선
 if st.session_state.table_expanded:
     st.dataframe(filtered, use_container_width=True, height=580)
     st.markdown("---")
-    st.markdown("## 📊 분포 비교 — AI Dashboard")
 
-    r1c1, r1c2 = st.columns(2)
-    with r1c1:
-        st.plotly_chart(fig_distribution(df, filtered, "new_contracts", "📈 신계약 건수 분포"),
-                        use_container_width=True)
-    with r1c2:
-        st.plotly_chart(fig_distribution(df, filtered, "claims", "📋 청구 건수 분포"),
-                        use_container_width=True)
+# ── 차트: 항상 전체 너비 2열 그리드
+st.markdown("## 📊 분포 비교 — AI Dashboard")
 
-    r2c1, r2c2 = st.columns(2)
-    with r2c1:
-        st.plotly_chart(fig_distribution(df, filtered, "payouts", "💰 지급 건수 분포"),
-                        use_container_width=True)
-    with r2c2:
-        st.plotly_chart(fig_percentage(df, filtered), use_container_width=True)
+r1c1, r1c2 = st.columns(2)
+with r1c1:
+    st.plotly_chart(fig_distribution(df, filtered, "new_contracts", "📈 신계약 건수 분포"),
+                    use_container_width=True)
+with r1c2:
+    st.plotly_chart(fig_distribution(df, filtered, "claims", "📋 청구 건수 분포"),
+                    use_container_width=True)
 
-    r3c1, r3c2 = st.columns(2)
-    with r3c1:
-        st.plotly_chart(fig_radar(df, filtered),   use_container_width=True)
-    with r3c2:
-        st.plotly_chart(fig_scatter(df, filtered), use_container_width=True)
+r2c1, r2c2 = st.columns(2)
+with r2c1:
+    st.plotly_chart(fig_distribution(df, filtered, "payouts", "💰 지급 건수 분포"),
+                    use_container_width=True)
+with r2c2:
+    st.plotly_chart(fig_percentage(df, filtered), use_container_width=True)
 
-# ── 접힘 상태: 왼쪽 테이블 + 오른쪽 차트
-else:
-    left, right = st.columns([1, 1.6])
-    with left:
-        st.dataframe(filtered, height=500)
-    with right:
-        st.markdown("## 📊 분포 비교 — AI Dashboard")
-        st.plotly_chart(fig_distribution(df, filtered, "new_contracts", "📈 신계약 건수 분포"),
-                        use_container_width=True)
-        st.plotly_chart(fig_distribution(df, filtered, "claims", "📋 청구 건수 분포"),
-                        use_container_width=True)
-        st.plotly_chart(fig_distribution(df, filtered, "payouts", "💰 지급 건수 분포"),
-                        use_container_width=True)
-        st.plotly_chart(fig_percentage(df, filtered), use_container_width=True)
-        st.plotly_chart(fig_radar(df, filtered),   use_container_width=True)
-        st.plotly_chart(fig_scatter(df, filtered), use_container_width=True)
+r3c1, r3c2 = st.columns(2)
+with r3c1:
+    st.plotly_chart(fig_radar(df, filtered),   use_container_width=True)
+with r3c2:
+    st.plotly_chart(fig_scatter(df, filtered), use_container_width=True)
+
